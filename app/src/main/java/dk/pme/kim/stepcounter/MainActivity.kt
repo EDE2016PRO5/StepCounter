@@ -13,23 +13,15 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), SensorEventListener
 {
-    private var running = false
     private var mSensorManager:SensorManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        //  Setup them sensors:
+        //  Setup the sensors:
         mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-    }
-
-    override fun onResume()
-    {
-        super.onResume()
-        running = true
-        var stepSensor = mSensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+        val stepSensor = mSensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
 
         if(stepSensor == null)
         {
@@ -41,24 +33,15 @@ class MainActivity : AppCompatActivity(), SensorEventListener
         {
             mSensorManager?.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_UI)
         }
-    }
 
-    override fun onPause() {
-        super.onPause()
-        running = false
-        mSensorManager?.unregisterListener(this)
     }
 
     override fun onSensorChanged(event: SensorEvent)
     {
-        if(running)
-        {
-            txtWalk.setText("" + event.values[0].toInt())
-        }
+        txtWalk.text = """${event.values[0].toInt()}"""
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int)
     {
-
     }
 }
