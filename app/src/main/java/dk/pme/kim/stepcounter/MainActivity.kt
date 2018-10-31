@@ -13,23 +13,15 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), SensorEventListener
 {
-    private var running = false
     private var mSensorManager:SensorManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        //  Setup them sensors:
+        //  Setup the sensors:
         mSensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-    }
-
-    override fun onResume()
-    {
-        super.onResume()
-        running = true
-        var stepSensor = mSensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+        val stepSensor = mSensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
 
         if(stepSensor == null)
         {
@@ -39,26 +31,22 @@ class MainActivity : AppCompatActivity(), SensorEventListener
 
         else
         {
+            //If you want to continuously track the number of steps over a long period of time,
+            // do NOT unregister for this sensor, so that it keeps counting steps in the background
+            // even when the AP is in suspend mode and report the aggregate count
+            // when the AP is awake. Application needs to stay registered for this sensor
+            // because step counter does not count steps if it is not activated
             mSensorManager?.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_UI)
         }
-    }
 
-    override fun onPause() {
-        super.onPause()
-        running = false
-        mSensorManager?.unregisterListener(this)
     }
 
     override fun onSensorChanged(event: SensorEvent)
     {
-        if(running)
-        {
-            txtWalk.setText("" + event.values[0].toInt())
-        }
+        txtWalk.text = """${event.values[0].toInt()}"""
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int)
     {
-
     }
 }
