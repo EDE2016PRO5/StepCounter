@@ -37,6 +37,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener
             // when the AP is awake. Application needs to stay registered for this sensor
             // because step counter does not count steps if it is not activated
             mSensorManager?.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_UI)
+            println("""name: ${stepSensor.name} maxdelay: ${stepSensor.maxDelay}
+                |   maximum range: ${stepSensor.maximumRange}
+                |   isDynamicSensor: ${stepSensor.isDynamicSensor}
+                |   isWakeUpSensor: ${stepSensor.isWakeUpSensor}
+                |   power ${stepSensor.power} reportingMode ${stepSensor.reportingMode}
+                |   resolution ${stepSensor.resolution} type: """.trimMargin())
         }
 
     }
